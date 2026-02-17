@@ -1,0 +1,13 @@
+let a = 100;
+
+function outer() {
+  let b = 20;
+
+  function inner() {
+    console.log(a, b);
+  }
+
+  inner();
+}
+
+outer();

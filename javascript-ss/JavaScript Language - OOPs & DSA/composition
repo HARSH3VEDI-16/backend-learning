@@ -1,0 +1,6 @@
+const canWalk = { walk: () => console.log("Walk") };
+const canEat = { eat: () => console.log("Eat") };
+
+const person = Object.assign({}, canWalk, canEat);
+person.walk();
+person.eat();

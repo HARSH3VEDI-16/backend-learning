@@ -1,0 +1,14 @@
+
+// Class syntax
+class User {
+  constructor(name) {
+    this.name = name;
+  }
+
+  greet() {
+    console.log(this.name);
+  }
+}
+
+const u = new User("John");
+u.greet();

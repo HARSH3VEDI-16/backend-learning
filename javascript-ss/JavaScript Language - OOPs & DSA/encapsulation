@@ -1,0 +1,11 @@
+class Bank {
+  #balance = 0;
+
+  deposit(amount) {
+    this.#balance += amount;
+    console.log(this.#balance);
+  }
+}
+
+const b = new Bank();
+b.deposit(100);

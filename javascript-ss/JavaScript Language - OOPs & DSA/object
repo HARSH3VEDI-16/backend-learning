@@ -1,0 +1,8 @@
+// object
+const user = {
+  name: "Alex",
+  greet() {
+    console.log(this.name);
+  }
+};
+user.greet();

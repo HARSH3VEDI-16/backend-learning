@@ -1,0 +1,6 @@
+// Constructor function
+function User(name) {
+  this.name = name;
+}
+const u1 = new User("Sam");
+console.log(u1.name);

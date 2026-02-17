@@ -1,0 +1,13 @@
+class Animal {
+  speak() {
+    console.log("Sound");
+  }
+}
+
+class Dog extends Animal {
+  speak() {
+    console.log("Bark");
+  }
+}
+
+new Dog().speak();
