@@ -74,3 +74,50 @@ DELETE /products/:id → Delete a product
 Testing
 
 Use Postman or any API client to test the endpoints.
+
+## API Testing
+
+You can test the backend APIs using **Postman** or any API client.  
+
+### Sample Requests
+
+**Users**
+
+- **Get all users**  
+  `GET http://localhost:3000/users`  
+
+- **Create a new user**  
+  `POST http://localhost:3000/users`  
+  ```json
+  {
+    "name": "Alice",
+    "email": "alice@example.com",
+    "password": "1234"
+  }
+
+  Update a user
+PUT http://localhost:3000/users/1
+
+{
+  "name": "Alice Updated",
+  "email": "alice.new@example.com"
+}
+Delete a user
+DELETE http://localhost:3000/users/1
+
+Products
+
+Get all products
+GET http://localhost:3000/products
+
+Create a new product
+POST http://localhost:3000/products
+{
+  "name": "Laptop",
+  "price": 50000
+}
+Update a product
+PUT http://localhost:3000/products/1
+
+Delete a product
+DELETE http://localhost:3000/products/1
