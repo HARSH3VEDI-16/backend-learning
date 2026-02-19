@@ -1,4 +1,4 @@
-// Import models first so sequelize.sync() knows about them
+require('dotenv').config();
 const User = require("./src/models/user.model");
 const Product = require("./src/models/product.model");
 

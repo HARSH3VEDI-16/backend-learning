@@ -12,6 +12,9 @@ const Product = sequelize.define(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
     description: {
       type: DataTypes.TEXT,
@@ -19,10 +22,16 @@ const Product = sequelize.define(
     price: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
+      validate: {
+        min: 0,
+      },
     },
     stock: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
+      validate: {
+        min: 0,
+      },
     },
   },
   {
