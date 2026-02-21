@@ -2,66 +2,74 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const logger = require('../utils/logger');
 
 // -------------------- REGISTER USER --------------------
 const registerUser = async (req, res) => {
-  console.log("🔥 REGISTER API CALLED 🔥");
-
   try {
     const { name, email, password } = req.body;
-    console.log("Original password:", password);
 
-    // Hash password
+    // 🔎 Validate input manually (better practice)
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("Hashed password:", hashedPassword);
 
-    // Save user in DB
     const user = await User.create({
       name,
       email,
       password: hashedPassword
     });
 
-    console.log("Saved password in DB:", user.password);
-
-    // Exclude password from response
-    const { password: pwd, ...userWithoutPassword } = user.toJSON();
+    logger.info(`New user registered: ${user.email}`);
 
     res.status(201).json({
       message: "User created successfully",
-      user: userWithoutPassword
+      user
     });
 
   } catch (error) {
-    console.error(error);
+    console.log("FULL ERROR:", error);
+    console.log("ERROR DETAILS:", error.errors);
+
+    logger.error(`Registration failed: ${error.message}`);
     res.status(500).json({ error: error.message });
   }
-};
+}; // ✅ <-- THIS WAS MISSING
 
 // -------------------- LOGIN USER --------------------
 const loginUser = async (req, res) => {
-  console.log("🔥 LOGIN API CALLED 🔥");
-
   try {
     const { email, password } = req.body;
 
-    // 1️⃣ Find user by email
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password are required" });
+    }
+
     const user = await User.findOne({ where: { email } });
-    if (!user) return res.status(401).json({ error: "Invalid email or password" });
 
-    // 2️⃣ Compare password
+    if (!user) {
+      logger.error(`Login failed - user not found: ${email}`);
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ error: "Invalid email or password" });
 
-    // 3️⃣ Generate JWT
+    if (!isMatch) {
+      logger.error(`Login failed - wrong password: ${email}`);
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
+
     const token = jwt.sign(
       { id: user.id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN }
     );
 
-    // Exclude password from response
     const { password: pwd, ...userWithoutPassword } = user.toJSON();
+
+    logger.info(`User logged in: ${user.email}`);
 
     res.status(200).json({
       message: "Login successful",
@@ -70,12 +78,12 @@ const loginUser = async (req, res) => {
     });
 
   } catch (error) {
-    console.error(error);
+    logger.error(`Login error: ${error.message}`);
     res.status(500).json({ error: error.message });
   }
 };
 
-// ✅ Export both functions
+// ✅ Export
 module.exports = {
   registerUser,
   loginUser
