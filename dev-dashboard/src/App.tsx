@@ -1,54 +1,36 @@
-import { useRef } from "react";
-import UserList from "./components/UserList";
-import { useScrollSpy } from "./hooks/useScrollSpy";
+// src/App.tsx
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import DashboardLayout from "./pages/DashboardLayout";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
+import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./components/ProtectedRoute";
 
-function App() {
-  const overviewRef = useRef<HTMLDivElement>(null);
-  const usersRef = useRef<HTMLDivElement>(null);
-  const analyticsRef = useRef<HTMLDivElement>(null);
-  const reportsRef = useRef<HTMLDivElement>(null);
-
-  const sections = [
-    { id: "overview", ref: overviewRef },
-    { id: "users", ref: usersRef },
-    { id: "analytics", ref: analyticsRef },
-    { id: "reports", ref: reportsRef },
-  ];
-
-  const activeSection = useScrollSpy(sections);
-
-  const scrollTo = (ref: React.RefObject<HTMLDivElement>) => {
-    ref.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const buttonStyle = (section: string) => ({
-    backgroundColor: activeSection === section ? "green" : "gray",
-    color: "white",
-    padding: "10px",
-    border: "none",
-    marginRight: "10px",
-    cursor: "pointer",
-  });
-
+export default function App() {
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Dev Dashboard</h1>
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
 
-      <div style={{ marginBottom: "20px" }}>
-        <button style={buttonStyle("overview")} onClick={() => scrollTo(overviewRef)}>Overview</button>
-        <button style={buttonStyle("users")} onClick={() => scrollTo(usersRef)}>Users</button>
-        <button style={buttonStyle("analytics")} onClick={() => scrollTo(analyticsRef)}>Analytics</button>
-        <button style={buttonStyle("reports")} onClick={() => scrollTo(reportsRef)}>Reports</button>
-      </div>
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="profile" element={<Profile />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
 
-      <UserList
-        overviewRef={overviewRef}
-        usersRef={usersRef}
-        analyticsRef={analyticsRef}
-        reportsRef={reportsRef}
-      />
-    </div>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
   );
 }
-
-export default App;
