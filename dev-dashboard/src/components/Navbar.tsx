@@ -1,24 +1,28 @@
-import { NavLink } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useSelector } from "react-redux";
+import type { RootState } from "../app/store";
 
-export default function Navbar() {
-  const { state, dispatch } = useAuth();
+function Navbar() {
+  const { data, loading, error } = useSelector(
+    (state: RootState) => state.user
+  );
 
   return (
-    <nav>
-      <NavLink to="/">Home</NavLink> |{" "}
-      <NavLink to="/dashboard/profile">Dashboard</NavLink> |{" "}
-      
-      {state.isAuthenticated ? (
-        <>
-          <span>Welcome {state.user?.name}</span>
-          <button onClick={() => dispatch({ type: "LOGOUT" })}>
-            Logout
-          </button>
-        </>
-      ) : (
-        <NavLink to="/login">Login</NavLink>
-      )}
-    </nav>
+    <div>
+      <h2>Users List</h2>
+
+      {loading && <p>🔄 Loading users...</p>}
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      {!loading && data.length === 0 && <p>No users found.</p>}
+
+      <ul>
+        {data.map((user) => (
+          <li key={user.id}>{user.name}</li>
+        ))}
+      </ul>
+    </div>
   );
 }
+
+export default Navbar;
