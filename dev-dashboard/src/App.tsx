@@ -1,11 +1,9 @@
-import Navbar from "./components/Navbar";
-import Login from "./components/Login";
+import UsersContainer from "./containers/UsersContainer";
 
 function App() {
   return (
-    <div>
-      <Navbar />
-      <Login />
+    <div style={{ padding: "20px" }}>
+      <UsersContainer />
     </div>
   );
 }
